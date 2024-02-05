@@ -60,7 +60,7 @@ func testFunctions() {
 	fmt.Println("Derived Address:", address)
 
 	// Construct transaction to send bitcoins
-	sendTx := constructSendTransaction(address, 100000) // 0.01 BTC in Satoshis
+	sendTx := constructSendTransaction(address, 1000000) // 0.01 BTC in Satoshis
 	fmt.Println("Send Transaction:", sendTx)
 }
 
