@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
 	"log"
@@ -34,7 +35,16 @@ func deriveAddress(redeemScript []byte) string {
 // Function to construct transaction to send bitcoins to the address
 func constructSendTransaction(address string, amount int64) *wire.MsgTx {
 	// This function simulates constructing a transaction
+	prevTx, err := chainhash.NewHashFromStr("")
+	if err != nil {
+		log.Fatal(err)
+	}
+	prevTxIndex := 0
+	
 	tx := wire.NewMsgTx(wire.TxVersion)
+	prevOut := wire.NewOutPoint(prevTx,uint32(prevTxIndex))
+	txIn := wire.NewTxIn(prevOut, []byte{txscript.OP_0, txscript.OP_0}, nil)
+	tx.AddTxIn(txIn)
 	output := wire.NewTxOut(amount, []byte(address))
 	tx.AddTxOut(output)
 	return tx
@@ -50,7 +60,7 @@ func testFunctions() {
 	fmt.Println("Derived Address:", address)
 
 	// Construct transaction to send bitcoins
-	sendTx := constructSendTransaction(address, 10000000) // 0.1 BTC in Satoshis
+	sendTx := constructSendTransaction(address, 100000) // 0.01 BTC in Satoshis
 	fmt.Println("Send Transaction:", sendTx)
 }
 
