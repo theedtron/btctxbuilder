@@ -74,13 +74,39 @@ func main() {
 	fmt.Println("Redeem Script:", hex.EncodeToString(redeemScript))
 
 	address := deriveAddress(redeemScript)
-	fmt.Println("Derived Address:", address)
+	fmt.Println("\nDerived Address:", address)
 
 	// Construct transaction to send bitcoins
 	sendTx := constructSendTransaction(address, 1000000) // 0.01 BTC in Satoshis
-	fmt.Println("Send Transaction:", sendTx)
+	fmt.Println("\nSend Transaction:")
+	for i, sndIn := range sendTx.TxIn {
+		fmt.Printf("Input %d:\n", i)
+        fmt.Printf("  Previous Tx Hash: %s\n", sndIn.PreviousOutPoint.Hash)
+        fmt.Printf("  Previous Tx Index: %d\n", sndIn.PreviousOutPoint.Index)
+        fmt.Printf("  Script Length: %d\n", len(sndIn.SignatureScript))
+        fmt.Println("  Script:", hex.EncodeToString(sndIn.SignatureScript))
+	}
+	for i, sndOut := range sendTx.TxOut {
+		fmt.Printf("Output %d:\n", i)
+		fmt.Printf("  Value: %d Satoshis\n", sndOut.Value)
+		fmt.Printf("  Script Length: %d\n", len(sndOut.PkScript))
+		fmt.Println("  Script:", hex.EncodeToString(sndOut.PkScript))
+	}
 
 	spendTx := constructSpendingTransaction(sendTx, redeemScript)
-	fmt.Println("Spend Transaction:", spendTx)
+	fmt.Println("\nSpend Transaction:")
+	for i, spndIn := range spendTx.TxIn {
+		fmt.Printf("Input %d:\n", i)
+        fmt.Printf("  Previous Tx Hash: %s\n", spndIn.PreviousOutPoint.Hash)
+        fmt.Printf("  Previous Tx Index: %d\n", spndIn.PreviousOutPoint.Index)
+        fmt.Printf("  Script Length: %d\n", len(spndIn.SignatureScript))
+        fmt.Println("  Script:", hex.EncodeToString(spndIn.SignatureScript))
+	}
+	for i, spndOut := range spendTx.TxOut {
+		fmt.Printf("Output %d:\n", i)
+		fmt.Printf("  Value: %d Satoshis\n", spndOut.Value)
+		fmt.Printf("  Script Length: %d\n", len(spndOut.PkScript))
+		fmt.Println("  Script:", hex.EncodeToString(spndOut.PkScript))
+	}
 }
 
